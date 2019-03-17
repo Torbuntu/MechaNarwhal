@@ -60,6 +60,12 @@ def collide(rx, ry, ax, ay):
         return True
     else:
         return False
+        
+def collide2(rx, ry, ax, ay):
+    if ((rx < ax + 30) and (rx + 24 > ax) and (ry < ay + 16) and (ry + 18 > ay)):
+        return True
+    else:
+        return False
 ###########################
 
 title = True
@@ -186,26 +192,34 @@ while True:
         #enemies
         if current == 0:
             current += 1
-            spr = rand.getrandbits(3)-1
+            spr = rand.getrandbits(3)
             y = 0
             if spr < 2:
                 y = 38
-            
+            if spr == 7:
+                y = 32
             cind = {"id": spr, "spr": enemies_sprites[spr], "x": 110, "y": y}
         else:
-            screen.blit(cind["spr"], cind["x"], cind["y"])
+            
             cind["x"]-=speed
             if cind["x"] < -16:
                 current = 0
         
-        if collide(x,y,cind["x"], cind["y"]):
-            if cind["id"] > 3 and dashing:
-                print("Close call")   
-            else:
+        if cind["id"] < 7:
+            if collide(x,y,cind["x"], cind["y"]):
+                if cind["id"] > 3 and dashing:
+                    print("Close call")   
+                else:
+                    gameover = True
+                    if score > best:
+                        best = score
+        else:
+            if collide2(x,y,cind["x"],cind["y"]):
                 gameover = True
                 if score > best:
                     best = score
-            
+                        
+        screen.blit(cind["spr"], cind["x"], cind["y"])
         pok.draw_text(3, 3, "Distance: "+str(score), 6) 
         pok.draw_text(2, 2, "Distance: "+str(score), 3) 
         
